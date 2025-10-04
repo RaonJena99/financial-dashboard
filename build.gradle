@@ -2,6 +2,11 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+
+    // 추가: 코드 품질 도구
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '6.0.26'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'io.github.RaonJena99'
@@ -36,4 +41,49 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+/* -------------------- 코드 품질 설정 -------------------- */
+
+// 1) 포맷팅: Spotless
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat()    // Google Java Style
+        removeUnusedImports() // 안 쓰는 import 제거
+        importOrder()         // 기본 import 정렬
+    }
+}
+
+// 2) Checkstyle (규칙 파일 쓰면 주석 해제)
+checkstyle {
+    toolVersion = '10.18.1'
+    // configFile = file("$rootDir/config/checkstyle/checkstyle.xml")
+}
+
+// 3) SpotBugs 보고서(html) 세팅
+spotbugs { }
+tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+    reports.create("html") {
+        required.set(true)
+        outputLocation.set(file("$buildDir/reports/spotbugs/${name}.html"))
+    }
+    reports.getByName("xml").required.set(false)
+}
+
+// 4) check 시 정적분석도 같이 돌리기(선택)
+tasks.named('check') {
+    dependsOn 'spotbugsMain', 'spotbugsTest', 'checkstyleMain', 'checkstyleTest'
+}
+
+// 5) 커밋 전 한 방에 검사하는 태스크
+tasks.register('preCommit') {
+    group = 'verification'
+    description = 'Run formatting check, static analysis and tests for pre-commit.'
+    dependsOn(
+            'spotlessCheck',
+            'checkstyleMain', 'checkstyleTest',
+            'spotbugsMain', 'spotbugsTest',
+            'test'
+    )
 }
