@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- domain 패키지의 EI/EI2는 제외 -->
+    <Match>
+        <Package name="~io\.github\.RaonJena99\.financial_dashboard\.domain(\..*)?"/>
+        <Bug code="EI,EI2"/>
+    </Match>
+</FindBugsFilter>
