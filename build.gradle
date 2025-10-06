@@ -1,3 +1,5 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.6'
@@ -27,6 +29,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+dependencyManagement {
+    // Spring Boot BOM이 적용된 상태에서 개별 항목만 재정의
+    dependencies {
+        dependency 'org.apache.commons:commons-lang3:3.19.0' // CVE 회피(>=3.18.0)
+    }
 }
 
 dependencies {
@@ -67,12 +76,18 @@ checkstyle {
 spotbugs {
     excludeFilter = file("$rootDir/config/spotbugs/exclude.xml")
 }
-tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+
+tasks.withType(SpotBugsTask).configureEach {
     reports {
         html {
-            required = true
-            outputLocation = file("$buildDir/reports/spotbugs/${name}.html")
+            required.set(true)
+            // RegularFileProperty 로 설정해야 함
+            outputLocation.set(layout.buildDirectory.file("reports/spotbugs/${name}.html"))
         }
+        // 필요 없으면 다른 포맷 끄기(선택)
+        xml.required.set(false)
+        text.required.set(false)
+        sarif.required.set(false)
     }
 }
 
