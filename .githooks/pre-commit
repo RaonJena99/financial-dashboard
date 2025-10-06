@@ -2,21 +2,26 @@
 set -euo pipefail
 
 GRADLE="./gradlew"; [ -x "$GRADLE" ] || GRADLE="gradle"
-echo "🔍 Pre-commit checks"
+echo "🔍 커밋 전 점검을 시작합니다."
 
-# Java 변경 없으면 스킵(원하면 제거)
+# Java 변경 없으면 스킵
 if ! git diff --cached --name-only | grep -E '^src/.*\.java$' >/dev/null 2>&1; then
-  echo "ℹ️ Staged Java 변경 없음 → 스킵"; exit 0; fi
+  echo "ℹ️ 스테이징된 Java 파일 변경이 없습니다. 점검을 건너뜁니다.";
+  exit 0;
+fi
 
 # 포맷 체크 → 자동수정 후 커밋 중단
 if ! $GRADLE -q spotlessCheck; then
-  echo "🧹 Formatting issues → spotlessApply"
+  echo "🧹 코드 포맷 불일치 발견 → 자동 정렬 중..."
   $GRADLE -q spotlessApply
   git add -A
-  echo "❗ 포맷 자동 수정됨. 변경 확인 후 다시 커밋하세요."
+  echo "❗ 코드 스타일이 자동으로 수정되었습니다."
+  echo "👉 변경 내용을 확인한 뒤 다시 커밋해주세요."
   exit 1
 fi
 
 # 정적 분석 + 테스트
+echo "🧪 정적 분석 및 테스트를 실행합니다..."
 $GRADLE -q preCommit
-echo "✅ OK"
+
+echo "✅ 모든 검사를 통과했습니다. 커밋을 진행합니다!"
