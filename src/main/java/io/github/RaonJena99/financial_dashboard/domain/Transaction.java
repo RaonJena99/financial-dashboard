@@ -26,5 +26,7 @@ public class Transaction {
 
   private String merchantName; // 가맹점명
 
+  private String category; // 카테고리 (예: "식비", "교통비")
+
   private String type; // 입출금 구분 (예: "INCOME", "EXPENSE")
 }
