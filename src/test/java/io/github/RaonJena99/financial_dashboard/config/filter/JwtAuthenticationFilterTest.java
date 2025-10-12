@@ -40,8 +40,8 @@ class JwtAuthenticationFilterTest {
     JWTUtil jwtUtil = Mockito.mock(JWTUtil.class);
 
     User principal = new User();
-    set(principal, "email", "e@x.com");
-    set(principal, "username", "e@x.com");
+    set(principal, "email");
+    set(principal, "username");
 
     Authentication authResult =
         new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
@@ -92,7 +92,7 @@ class JwtAuthenticationFilterTest {
   // ---- 테스트용 DTO / 유틸 ----
   record LoginReq(String email, String password) {}
 
-  private static void set(Object target, String fieldName, Object value) {
+  private static void set(Object target, String fieldName) {
     Class<?> c = target.getClass();
     java.lang.reflect.Field f = null;
 
@@ -111,7 +111,7 @@ class JwtAuthenticationFilterTest {
 
     f.setAccessible(true);
     try {
-      f.set(target, value);
+      f.set(target, (Object) "e@x.com");
     } catch (IllegalAccessException e) {
       throw new IllegalStateException("Failed to set field: " + fieldName, e);
     }

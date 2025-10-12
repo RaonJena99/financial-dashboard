@@ -66,7 +66,7 @@ class UserControllerTest {
 
   @Test
   @DisplayName("POST /api/users/register - 서비스 예외 시 예외가 전달된다(전역 예외 처리기 없음 가정)")
-  void registerUser_serviceThrows_throwsServletException() throws Exception {
+  void registerUser_serviceThrows_throwsServletException() {
     // given
     User requestUser = new User();
     setField(requestUser, "email", "dup@example.com");
