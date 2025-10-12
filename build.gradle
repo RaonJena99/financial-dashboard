@@ -45,9 +45,19 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+
+    // test를 위한 dependency
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.h2database:h2' // 테스트용 H2 추가
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT 인증
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
 tasks.named('test') {
