@@ -20,18 +20,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest // 스프링 부트 통합 테스트 환경 로드
-@AutoConfigureMockMvc // MockMvc를 자동으로 설정하여 HTTP 요청 시뮬레이션
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false) // ★ 시큐리티 필터 비활성화 → 403 방지
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @DisplayName("TransactionController 통합 테스트")
 class TransactionControllerTest {
 
   @Autowired private MockMvc mockMvc;
+  @Autowired private ObjectMapper objectMapper;
 
-  @Autowired private ObjectMapper objectMapper; // 객체를 JSON 문자열로 변환
-
-  @MockitoBean // 실제 서비스 대신 가짜 TransactionService Bean을 주입
+  @MockitoBean // ★ 서비스 목 주입
   private TransactionService transactionService;
 
   @Test
