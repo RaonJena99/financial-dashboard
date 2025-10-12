@@ -2,6 +2,7 @@ package io.github.RaonJena99.financial_dashboard.config.filter;
 
 import io.github.RaonJena99.financial_dashboard.service.CustomUserDetailsService;
 import io.github.RaonJena99.financial_dashboard.util.JWTUtil;
+import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,14 +17,17 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
   private final JWTUtil jwtUtil;
   private final CustomUserDetailsService userDetailsService;
 
-  public JwtVerificationFilter(JWTUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+  public JwtVerificationFilter(
+      @NonNull JWTUtil jwtUtil, @NonNull CustomUserDetailsService userDetailsService) {
     this.jwtUtil = jwtUtil;
     this.userDetailsService = userDetailsService;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain)
       throws ServletException, IOException {
     String authorizationHeader = request.getHeader("Authorization");
 
