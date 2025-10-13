@@ -16,4 +16,4 @@ HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
   CMD wget -qO- "http://127.0.0.1:${PORT:-8080}/actuator/health/readiness" || exit 1
 
 EXPOSE 8080
-CMD sh -c "java $JAVA_OPTS -jar /app/app.jar"
+CMD sh -c "java $JAVA_OPTS -jar /app/app.jar --server.port=${PORT:-8080}"

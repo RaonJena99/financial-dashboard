@@ -5,6 +5,9 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/app?sslMode=REQUIRED&enabledTLSProtocols=TLSv1.2}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
+    hikari:
+      initialization-fail-timeout: 0
+      connection-timeout: 30000
   jpa:
     hibernate:
       ddl-auto: none
